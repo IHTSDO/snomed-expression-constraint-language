@@ -1,0 +1,2 @@
+< 404684003 |clinical finding|:
+    * = 79654002 |edema|

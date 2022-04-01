@@ -9,13 +9,14 @@ The folders are organized as follows:
 * _**syntax**_
   * Contains the brief (normative) and long (informative) ABNF syntaxes. Also the brief ANTLR v4 syntax.
 * _**examples**_
-  * Contains a set of files with valid ECL examples.
+  * Contains an extensive set of files with valid ECL examples.
+
+## Other Useful Resources
 
 ### ECL Specification and Guide
 The Specification and Guide is available at [snomed.org/ecl](http://snomed.org/ecl).
 
-## Other useful resources
-#### ECL Parsers
+### ECL Parsers
 - JavaScript (ECMAScript):
   - Parsers can be generated using the [APG JS project](https://github.com/ldthomas/apg-js), enables validating the syntax of ECL in a web page.
 - Java parsers:

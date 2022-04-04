@@ -1,0 +1,1 @@
+< 195967001 |Asthma| {{ C definitionStatus = primitive, moduleId = 900000000000207008 |SNOMED CT core module| }}

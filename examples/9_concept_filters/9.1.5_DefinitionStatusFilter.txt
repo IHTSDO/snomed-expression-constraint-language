@@ -1,0 +1,1 @@
+< 64572001 |Disease| {{ C definitionStatus = primitive }} {{ D term = "heart"}}

@@ -1,0 +1,1 @@
+< 56265001 |Heart disease| {{ C definitionStatusId = 900000000000074008 |Primitive| }}

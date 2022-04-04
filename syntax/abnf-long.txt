@@ -33,7 +33,7 @@ conjunctionAttributeSet = 1*(ws conjunction ws subAttributeSet)
 disjunctionAttributeSet = 1*(ws disjunction ws subAttributeSet)
 subAttributeSet = eclAttribute / "(" ws eclAttributeSet ws ")"
 eclAttributeGroup = ["[" cardinality "]" ws] "{" ws eclAttributeSet ws "}"
-eclAttribute = ["[" cardinality "]" ws] [reverseFlag ws] eclAttributeName ws (expressionComparisonOperator ws subExpressionConstraint / numericComparisonOperator ws "#" numericValue / stringComparisonOperator ws QM stringValue QM)
+eclAttribute = ["[" cardinality "]" ws] [reverseFlag ws] eclAttributeName ws (expressionComparisonOperator ws subExpressionConstraint / numericComparisonOperator ws "#" numericValue / stringComparisonOperator ws QM stringValue QM / booleanComparisonOperator ws booleanValue)
 cardinality = minValue to maxValue
 minValue = nonNegativeIntegerValue
 to = ".." / (mws ("t"/"T") ("o"/"O") mws)
@@ -44,10 +44,14 @@ eclAttributeName = subExpressionConstraint
 expressionComparisonOperator = "=" / "!=" / ("n"/"N") ("o"/"O") ("t"/"T") ws "=" / "<>"
 numericComparisonOperator = "=" / "!=" / ("n"/"N") ("o"/"O") ("t"/"T") ws "=" / "<>" / "<=" / "<" / ">=" / ">"
 stringComparisonOperator = "=" / "!=" / ("n"/"N") ("o"/"O") ("t"/"T") ws "=" / "<>"
+booleanComparisonOperator = "=" / "!=" / ("n"/"N") ("o"/"O") ("t"/"T") ws "=" / "<>"
 numericValue = ["-"/"+"] (decimalValue / integerValue)
 stringValue = 1*(anyNonEscapedChar / escapedChar)
 integerValue = digitNonZero *digit / zero
 decimalValue = integerValue "." 1*digit
+booleanValue = true / false
+true = ("t"/"T") ("r"/"R") ("u"/"U") ("e"/"E")
+false = ("f"/"F") ("a"/"A") ("l"/"L") ("s"/"S") ("e"/"E")
 nonNegativeIntegerValue = (digitNonZero *digit ) / zero
 sctId = digitNonZero 5*17( digit )
 ws = *( SP / HTAB / CR / LF / comment ) ; optional white space

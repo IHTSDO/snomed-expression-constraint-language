@@ -1,2 +1,0 @@
-< 105590001 |Substance| AND
-    ( < 27658006 |Product containing amoxicillin| . << 127489000 |Has active ingredient| )

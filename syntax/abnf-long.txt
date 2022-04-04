@@ -1,16 +1,16 @@
 expressionConstraint = ws ( refinedExpressionConstraint / compoundExpressionConstraint / dottedExpressionConstraint / subExpressionConstraint ) ws
-refinedExpressionConstraint = simpleExpressionConstraint ws ":" ws eclRefinement
+refinedExpressionConstraint = subExpressionConstraint ws ":" ws eclRefinement
 compoundExpressionConstraint = conjunctionExpressionConstraint / disjunctionExpressionConstraint / exclusionExpressionConstraint
 conjunctionExpressionConstraint = subExpressionConstraint 1*(ws conjunction ws subExpressionConstraint)
 disjunctionExpressionConstraint = subExpressionConstraint 1*(ws disjunction ws subExpressionConstraint)
 exclusionExpressionConstraint = subExpressionConstraint ws exclusion ws subExpressionConstraint
-dottedExpressionConstraint = subExpressionConstraint 1*(ws dot ws [attributeOperator ws] eclAttributeName)
+dottedExpressionConstraint = subExpressionConstraint 1*(ws dottedExpressionAttribute)
+dottedExpressionAttribute = dot ws eclAttributeName
 subExpressionConstraint = [constraintOperator ws] [memberOf ws] (eclFocusConcept / "(" ws expressionConstraint ws ")")
-simpleExpressionConstraint = [constraintOperator ws] [memberOf ws] eclFocusConcept
-eclFocusConcept = conceptReference / wildCard
+eclFocusConcept = eclConceptReference / wildCard
 dot = "."
 memberOf = "^" / ("m"/"M") ("e"/"E") ("m"/"M") ("b"/"B") ("e"/"E") ("r"/"R") ("o"/"O") ("f"/"F")
-conceptReference = conceptId [ws "|" ws term ws "|"]
+eclConceptReference = conceptId [ws "|" ws term ws "|"]
 conceptId = sctId
 term = 1*nonwsNonPipe *( 1*SP 1*nonwsNonPipe )
 wildCard = "*" / ( ("a"/"A") ("n"/"N") ("y"/"Y") )
@@ -33,15 +33,14 @@ conjunctionAttributeSet = 1*(ws conjunction ws subAttributeSet)
 disjunctionAttributeSet = 1*(ws disjunction ws subAttributeSet)
 subAttributeSet = eclAttribute / "(" ws eclAttributeSet ws ")"
 eclAttributeGroup = ["[" cardinality "]" ws] "{" ws eclAttributeSet ws "}"
-eclAttribute = ["[" cardinality "]" ws] [reverseFlag ws] [attributeOperator ws] eclAttributeName ws (expressionComparisonOperator ws subExpressionConstraint / numericComparisonOperator ws "#" numericValue / stringComparisonOperator ws QM stringValue QM)
+eclAttribute = ["[" cardinality "]" ws] [reverseFlag ws] eclAttributeName ws (expressionComparisonOperator ws subExpressionConstraint / numericComparisonOperator ws "#" numericValue / stringComparisonOperator ws QM stringValue QM)
 cardinality = minValue to maxValue
 minValue = nonNegativeIntegerValue
 to = ".." / (mws ("t"/"T") ("o"/"O") mws)
 maxValue = nonNegativeIntegerValue / many
 many = "*" / ( ("m"/"M") ("a"/"A") ("n"/"N") ("y"/"Y"))
 reverseFlag = ( ("r"/"R") ("e"/"E") ("v"/"V") ("e"/"E") ("r"/"R") ("s"/"S") ("e"/"E") ("o"/"O") ("f"/"F")) / "R"
-attributeOperator = descendantOrSelfOf / descendantOf
-eclAttributeName = conceptReference / wildCard
+eclAttributeName = subExpressionConstraint
 expressionComparisonOperator = "=" / "!=" / ("n"/"N") ("o"/"O") ("t"/"T") ws "=" / "<>"
 numericComparisonOperator = "=" / "!=" / ("n"/"N") ("o"/"O") ("t"/"T") ws "=" / "<>" / "<=" / "<" / ">=" / ">"
 stringComparisonOperator = "=" / "!=" / ("n"/"N") ("o"/"O") ("t"/"T") ws "=" / "<>"

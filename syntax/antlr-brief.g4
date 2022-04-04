@@ -7,21 +7,24 @@ disjunctionexpressionconstraint : subexpressionconstraint (ws disjunction ws sub
 exclusionexpressionconstraint : subexpressionconstraint ws exclusion ws subexpressionconstraint;
 dottedexpressionconstraint : subexpressionconstraint (ws dottedexpressionattribute)+;
 dottedexpressionattribute : dot ws eclattributename;
-subexpressionconstraint : (constraintoperator ws)? (memberof ws)? (eclfocusconcept | (LEFT_PAREN ws expressionconstraint ws RIGHT_PAREN));
+subexpressionconstraint : (constraintoperator ws)? (memberof ws)? (eclfocusconcept | (LEFT_PAREN ws expressionconstraint ws RIGHT_PAREN)) (ws filterconstraint)*;
 eclfocusconcept : eclconceptreference | wildcard;
 dot : PERIOD;
 memberof : CARAT;
 eclconceptreference : conceptid (ws PIPE ws term ws PIPE)?;
+eclconceptreferenceset : LEFT_PAREN ws eclconceptreference (mws eclconceptreference)* ws RIGHT_PAREN;
 conceptid : sctid;
 term : nonwsnonpipe+ ( sp+ nonwsnonpipe+ )*;
 wildcard : ASTERISK;
-constraintoperator : childof | descendantorselfof | descendantof | parentof | ancestororselfof | ancestorof;
+constraintoperator : childof | childorselfof | descendantorselfof | descendantof | parentof | parentorselfof | ancestororselfof | ancestorof;
 descendantof : LESS_THAN;
 descendantorselfof : (LESS_THAN LESS_THAN);
 childof : (LESS_THAN EXCLAMATION);
+childorselfof : (LESS_THAN LESS_THAN EXCLAMATION);
 ancestorof : GREATER_THAN;
 ancestororselfof : (GREATER_THAN GREATER_THAN);
 parentof : (GREATER_THAN EXCLAMATION);
+parentorselfof : (GREATER_THAN GREATER_THAN EXCLAMATION);
 conjunction : (((CAP_A | A)|(CAP_A | A)) ((CAP_N | N)|(CAP_N | N)) ((CAP_D | D)|(CAP_D | D)) mws) | COMMA;
 disjunction : ((CAP_O | O)|(CAP_O | O)) ((CAP_R | R)|(CAP_R | R)) mws;
 exclusion : ((CAP_M | M)|(CAP_M | M)) ((CAP_I | I)|(CAP_I | I)) ((CAP_N | N)|(CAP_N | N)) ((CAP_U | U)|(CAP_U | U)) ((CAP_S | S)|(CAP_S | S)) mws;
@@ -46,6 +49,45 @@ expressioncomparisonoperator : EQUALS | (EXCLAMATION EQUALS);
 numericcomparisonoperator : EQUALS | (EXCLAMATION EQUALS) | (LESS_THAN EQUALS) | LESS_THAN | (GREATER_THAN EQUALS) | GREATER_THAN;
 stringcomparisonoperator : EQUALS | (EXCLAMATION EQUALS);
 booleancomparisonoperator : EQUALS | (EXCLAMATION EQUALS);
+filterconstraint : (LEFT_CURLY_BRACE LEFT_CURLY_BRACE) ws filter (ws COMMA ws filter)* ws (RIGHT_CURLY_BRACE RIGHT_CURLY_BRACE);
+filter : termfilter | languagefilter | typefilter | dialectfilter;
+termfilter : termkeyword ws booleancomparisonoperator ws (typedsearchterm | typedsearchtermset);
+termkeyword : ((CAP_T | T)|(CAP_T | T)) ((CAP_E | E)|(CAP_E | E)) ((CAP_R | R)|(CAP_R | R)) ((CAP_M | M)|(CAP_M | M));
+typedsearchterm : ( ( match ws COLON ws )? matchsearchtermset ) | ( wild ws COLON ws wildsearchtermset );
+typedsearchtermset : LEFT_PAREN ws typedsearchterm (mws typedsearchterm)* ws RIGHT_PAREN;
+wild : ((CAP_W | W)|(CAP_W | W)) ((CAP_I | I)|(CAP_I | I)) ((CAP_L | L)|(CAP_L | L)) ((CAP_D | D)|(CAP_D | D));
+match : ((CAP_M | M)|(CAP_M | M)) ((CAP_A | A)|(CAP_A | A)) ((CAP_T | T)|(CAP_T | T)) ((CAP_C | C)|(CAP_C | C)) ((CAP_H | H)|(CAP_H | H));
+matchsearchterm : (nonwsnonescapedchar | escapedchar)+;
+matchsearchtermset : qm ws matchsearchterm (mws matchsearchterm)* ws qm;
+wildsearchterm : (anynonescapedchar | escapedwildchar)+;
+wildsearchtermset : qm wildsearchterm qm;
+languagefilter : language ws booleancomparisonoperator ws (languagecode | languagecodeset);
+language : ((CAP_L | L)|(CAP_L | L)) ((CAP_A | A)|(CAP_A | A)) ((CAP_N | N)|(CAP_N | N)) ((CAP_G | G)|(CAP_G | G)) ((CAP_U | U)|(CAP_U | U)) ((CAP_A | A)|(CAP_A | A)) ((CAP_G | G)|(CAP_G | G)) ((CAP_E | E)|(CAP_E | E));
+languagecode : (alpha alpha);
+languagecodeset : LEFT_PAREN ws languagecode (mws languagecode)* ws RIGHT_PAREN;
+typefilter : typeidfilter | typetokenfilter;
+typeidfilter : typeid ws booleancomparisonoperator ws (eclconceptreference | eclconceptreferenceset);
+typeid : ((CAP_T | T)|(CAP_T | T)) ((CAP_Y | Y)|(CAP_Y | Y)) ((CAP_P | P)|(CAP_P | P)) ((CAP_E | E)|(CAP_E | E)) ((CAP_I | I)|(CAP_I | I)) ((CAP_D | D)|(CAP_D | D));
+typetokenfilter : type ws booleancomparisonoperator ws (typetoken | typetokenset);
+type : ((CAP_T | T)|(CAP_T | T)) ((CAP_Y | Y)|(CAP_Y | Y)) ((CAP_P | P)|(CAP_P | P)) ((CAP_E | E)|(CAP_E | E));
+typetoken : synonym | fullyspecifiedname | definition;
+typetokenset : LEFT_PAREN ws typetoken (mws typetoken)* ws RIGHT_PAREN;
+synonym : ((CAP_S | S)|(CAP_S | S)) ((CAP_Y | Y)|(CAP_Y | Y)) ((CAP_N | N)|(CAP_N | N));
+fullyspecifiedname : ((CAP_F | F)|(CAP_F | F)) ((CAP_S | S)|(CAP_S | S)) ((CAP_N | N)|(CAP_N | N));
+definition : ((CAP_D | D)|(CAP_D | D)) ((CAP_E | E)|(CAP_E | E)) ((CAP_F | F)|(CAP_F | F));
+dialectfilter : (dialectidfilter | dialectaliasfilter) ( ws acceptabilityset )?;
+dialectidfilter : dialectid ws booleancomparisonoperator ws (eclconceptreference | eclconceptreferenceset);
+dialectid : ((CAP_D | D)|(CAP_D | D)) ((CAP_I | I)|(CAP_I | I)) ((CAP_A | A)|(CAP_A | A)) ((CAP_L | L)|(CAP_L | L)) ((CAP_E | E)|(CAP_E | E)) ((CAP_C | C)|(CAP_C | C)) ((CAP_T | T)|(CAP_T | T)) ((CAP_I | I)|(CAP_I | I)) ((CAP_D | D)|(CAP_D | D));
+dialectaliasfilter : dialect ws booleancomparisonoperator ws (dialectalias | dialectaliasset);
+dialect : ((CAP_D | D)|(CAP_D | D)) ((CAP_I | I)|(CAP_I | I)) ((CAP_A | A)|(CAP_A | A)) ((CAP_L | L)|(CAP_L | L)) ((CAP_E | E)|(CAP_E | E)) ((CAP_C | C)|(CAP_C | C)) ((CAP_T | T)|(CAP_T | T));
+dialectalias : alpha ( dash | alpha | integervalue)*;
+dialectaliasset : LEFT_PAREN ws dialectalias (mws dialectalias)* ws RIGHT_PAREN;
+acceptabilityset : acceptabilityidset | acceptabilitytokenset;
+acceptabilityidset : eclconceptreferenceset;
+acceptabilitytokenset : LEFT_PAREN ws acceptabilitytoken (mws acceptabilitytoken)* ws RIGHT_PAREN;
+acceptabilitytoken : acceptable | preferred;
+acceptable : ((CAP_A | A)|(CAP_A | A)) ((CAP_C | C)|(CAP_C | C)) ((CAP_C | C)|(CAP_C | C)) ((CAP_E | E)|(CAP_E | E)) ((CAP_P | P)|(CAP_P | P)) ((CAP_T | T)|(CAP_T | T));
+preferred : ((CAP_P | P)|(CAP_P | P)) ((CAP_R | R)|(CAP_R | R)) ((CAP_E | E)|(CAP_E | E)) ((CAP_F | F)|(CAP_F | F)) ((CAP_E | E)|(CAP_E | E)) ((CAP_R | R)|(CAP_R | R));
 numericvalue : (DASH|PLUS)? (decimalvalue | integervalue);
 stringvalue : (anynonescapedchar | escapedchar)+;
 integervalue : (digitnonzero digit*) | zero;
@@ -58,21 +100,26 @@ sctid : digitnonzero (( digit ) (digit) (digit) (digit) (digit) (((digit) (digit
 ws : ( sp | htab | cr | lf | comment )*; // optional white space
 mws : ( sp | htab | cr | lf | comment )+; // mandatory white space
 comment : (SLASH ASTERISK) (nonstarchar | starwithnonfslash)* (ASTERISK SLASH);
-nonstarchar : sp | htab | cr | lf | (EXCLAMATION | QUOTE | HASH | DOLLAR | PERCENT | AMPERSAND | APOSTROPHE | LEFT_PAREN | RIGHT_PAREN) | (PLUS | COMMA | DASH | PERIOD | SLASH | ZERO | ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE | COLON | SEMICOLON | LESS_THAN | EQUALS | GREATER_THAN | QUESTION | AT | CAP_A | CAP_B | CAP_C | CAP_D | CAP_E | CAP_F | CAP_G | CAP_H | CAP_I | CAP_J | CAP_K | CAP_L | CAP_M | CAP_N | CAP_O | CAP_P | CAP_Q | CAP_R | CAP_S | CAP_T | CAP_U | CAP_V | CAP_W | CAP_X | CAP_Y | CAP_Z | LEFT_BRACE | BACKSLASH | RIGHT_BRACE | CARAT | UNDERSCORE | ACCENT | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | LEFT_CURLY_BRACE | PIPE | RIGHT_CURLY_BRACE | TILDE) |utf8_2 | utf8_3 | utf8_4;
+nonstarchar : sp | htab | cr | lf | (EXCLAMATION | QUOTE | HASH | DOLLAR | PERCENT | AMPERSAND | APOSTROPHE | LEFT_PAREN | RIGHT_PAREN) | (PLUS | COMMA | DASH | PERIOD | SLASH | ZERO | ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE | COLON | SEMICOLON | LESS_THAN | EQUALS | GREATER_THAN | QUESTION | AT | CAP_A | CAP_B | CAP_C | CAP_D | CAP_E | CAP_F | CAP_G | CAP_H | CAP_I | CAP_J | CAP_K | CAP_L | CAP_M | CAP_N | CAP_O | CAP_P | CAP_Q | CAP_R | CAP_S | CAP_T | CAP_U | CAP_V | CAP_W | CAP_X | CAP_Y | CAP_Z | LEFT_BRACE | BACKSLASH | RIGHT_BRACE | CARAT | UNDERSCORE | ACCENT | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | LEFT_CURLY_BRACE | PIPE | RIGHT_CURLY_BRACE | TILDE) | UTF8_LETTER;
 starwithnonfslash : ASTERISK nonfslash;
-nonfslash : sp | htab | cr | lf | (EXCLAMATION | QUOTE | HASH | DOLLAR | PERCENT | AMPERSAND | APOSTROPHE | LEFT_PAREN | RIGHT_PAREN | ASTERISK | PLUS | COMMA | DASH | PERIOD) | (ZERO | ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE | COLON | SEMICOLON | LESS_THAN | EQUALS | GREATER_THAN | QUESTION | AT | CAP_A | CAP_B | CAP_C | CAP_D | CAP_E | CAP_F | CAP_G | CAP_H | CAP_I | CAP_J | CAP_K | CAP_L | CAP_M | CAP_N | CAP_O | CAP_P | CAP_Q | CAP_R | CAP_S | CAP_T | CAP_U | CAP_V | CAP_W | CAP_X | CAP_Y | CAP_Z | LEFT_BRACE | BACKSLASH | RIGHT_BRACE | CARAT | UNDERSCORE | ACCENT | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | LEFT_CURLY_BRACE | PIPE | RIGHT_CURLY_BRACE | TILDE) |utf8_2 | utf8_3 | utf8_4;
+nonfslash : sp | htab | cr | lf | (EXCLAMATION | QUOTE | HASH | DOLLAR | PERCENT | AMPERSAND | APOSTROPHE | LEFT_PAREN | RIGHT_PAREN | ASTERISK | PLUS | COMMA | DASH | PERIOD) | (ZERO | ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE | COLON | SEMICOLON | LESS_THAN | EQUALS | GREATER_THAN | QUESTION | AT | CAP_A | CAP_B | CAP_C | CAP_D | CAP_E | CAP_F | CAP_G | CAP_H | CAP_I | CAP_J | CAP_K | CAP_L | CAP_M | CAP_N | CAP_O | CAP_P | CAP_Q | CAP_R | CAP_S | CAP_T | CAP_U | CAP_V | CAP_W | CAP_X | CAP_Y | CAP_Z | LEFT_BRACE | BACKSLASH | RIGHT_BRACE | CARAT | UNDERSCORE | ACCENT | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | LEFT_CURLY_BRACE | PIPE | RIGHT_CURLY_BRACE | TILDE) | UTF8_LETTER;
 sp : SPACE; // space
 htab : TAB; // tab
 cr : CR; // carriage return
 lf : LF; // line feed
 qm : QUOTE; // quotation mark
 bs : BACKSLASH; // back slash
+star : ASTERISK; // asterisk
 digit : (ZERO | ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE);
 zero : ZERO;
 digitnonzero : (ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE);
 nonwsnonpipe : (EXCLAMATION | QUOTE | HASH | DOLLAR | PERCENT | AMPERSAND | APOSTROPHE | LEFT_PAREN | RIGHT_PAREN | ASTERISK | PLUS | COMMA | DASH | PERIOD | SLASH | ZERO | ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE | COLON | SEMICOLON | LESS_THAN | EQUALS | GREATER_THAN | QUESTION | AT | CAP_A | CAP_B | CAP_C | CAP_D | CAP_E | CAP_F | CAP_G | CAP_H | CAP_I | CAP_J | CAP_K | CAP_L | CAP_M | CAP_N | CAP_O | CAP_P | CAP_Q | CAP_R | CAP_S | CAP_T | CAP_U | CAP_V | CAP_W | CAP_X | CAP_Y | CAP_Z | LEFT_BRACE | BACKSLASH | RIGHT_BRACE | CARAT | UNDERSCORE | ACCENT | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | LEFT_CURLY_BRACE) | (RIGHT_CURLY_BRACE | TILDE) | UTF8_LETTER;
 anynonescapedchar : sp | htab | cr | lf | (SPACE | EXCLAMATION) | (HASH | DOLLAR | PERCENT | AMPERSAND | APOSTROPHE | LEFT_PAREN | RIGHT_PAREN | ASTERISK | PLUS | COMMA | DASH | PERIOD | SLASH | ZERO | ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE | COLON | SEMICOLON | LESS_THAN | EQUALS | GREATER_THAN | QUESTION | AT | CAP_A | CAP_B | CAP_C | CAP_D | CAP_E | CAP_F | CAP_G | CAP_H | CAP_I | CAP_J | CAP_K | CAP_L | CAP_M | CAP_N | CAP_O | CAP_P | CAP_Q | CAP_R | CAP_S | CAP_T | CAP_U | CAP_V | CAP_W | CAP_X | CAP_Y | CAP_Z | LEFT_BRACE) | (RIGHT_BRACE | CARAT | UNDERSCORE | ACCENT | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | LEFT_CURLY_BRACE | PIPE | RIGHT_CURLY_BRACE | TILDE) | UTF8_LETTER;
 escapedchar : (bs qm) | (bs bs);
+escapedwildchar : (bs qm) | (bs bs) | (bs star);
+nonwsnonescapedchar : EXCLAMATION | (HASH | DOLLAR | PERCENT | AMPERSAND | APOSTROPHE | LEFT_PAREN | RIGHT_PAREN | ASTERISK | PLUS | COMMA | DASH | PERIOD | SLASH | ZERO | ONE | TWO | THREE | FOUR | FIVE | SIX | SEVEN | EIGHT | NINE | COLON | SEMICOLON | LESS_THAN | EQUALS | GREATER_THAN | QUESTION | AT | CAP_A | CAP_B | CAP_C | CAP_D | CAP_E | CAP_F | CAP_G | CAP_H | CAP_I | CAP_J | CAP_K | CAP_L | CAP_M | CAP_N | CAP_O | CAP_P | CAP_Q | CAP_R | CAP_S | CAP_T | CAP_U | CAP_V | CAP_W | CAP_X | CAP_Y | CAP_Z | LEFT_BRACE) | (RIGHT_BRACE | CARAT | UNDERSCORE | ACCENT | A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z | LEFT_CURLY_BRACE | PIPE | RIGHT_CURLY_BRACE | TILDE) | UTF8_LETTER;
+alpha : (CAP_A | CAP_B | CAP_C | CAP_D | CAP_E | CAP_F | CAP_G | CAP_H | CAP_I | CAP_J | CAP_K | CAP_L | CAP_M | CAP_N | CAP_O | CAP_P | CAP_Q | CAP_R | CAP_S | CAP_T | CAP_U | CAP_V | CAP_W | CAP_X | CAP_Y | CAP_Z) | (A | B | C | D | E | F | G | H | I | J | K | L | M | N | O | P | Q | R | S | T | U | V | W | X | Y | Z);
+dash : DASH;
 
 ////////////////////////////////////////////////////////////////////////////////////////////
 // Lexer rules generated for each distinct character in original grammar

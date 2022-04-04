@@ -1,0 +1,1 @@
+< 56265001 |Heart disease| {{ term = "hjärt", language = SV, type = syn }}

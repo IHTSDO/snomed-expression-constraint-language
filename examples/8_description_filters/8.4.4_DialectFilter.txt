@@ -1,0 +1,1 @@
+< 64572001 |Disease| {{ term = "card", dialect = ( en-nhs-clinical en-nhs-pharmacy ) }}

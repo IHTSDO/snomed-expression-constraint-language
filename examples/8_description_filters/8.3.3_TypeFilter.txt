@@ -1,0 +1,1 @@
+< 56265001 |Heart disease| {{ term = "hjärta", language = sv, typeId = 900000000000013009 |synonym| }}

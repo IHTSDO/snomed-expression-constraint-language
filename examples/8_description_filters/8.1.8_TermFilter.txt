@@ -1,0 +1,1 @@
+< 64572001 |Disease| {{ term = "eye" }} {{ term = wild:"*itis" }}

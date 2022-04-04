@@ -1,0 +1,4 @@
+/* Disorders of lung with edema */
+< 19829001 |Disorder of lung| : /* Descendants of disorder of lung */
+    116676008 |Associated morphology| = << 79654002 |Edema|
+    /* Where the associated morphology is edema or a subtype */

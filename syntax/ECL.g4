@@ -58,10 +58,10 @@ descriptionfilterconstraint : (LEFT_CURLY_BRACE LEFT_CURLY_BRACE) ws ( (CAP_D | 
 descriptionfilter : termfilter | languagefilter | typefilter | dialectfilter | modulefilter | effectivetimefilter | activefilter;
 termfilter : termkeyword ws stringcomparisonoperator ws (typedsearchterm | typedsearchtermset);
 termkeyword : ((CAP_T | T)|(CAP_T | T)) ((CAP_E | E)|(CAP_E | E)) ((CAP_R | R)|(CAP_R | R)) ((CAP_M | M)|(CAP_M | M));
-typedsearchterm : ( ( match ws COLON ws )? matchsearchtermset ) | ( wild ws COLON ws wildsearchtermset );
+typedsearchterm : ( ( matchkeyword ws COLON ws )? matchsearchtermset ) | ( wild ws COLON ws wildsearchtermset );
 typedsearchtermset : LEFT_PAREN ws typedsearchterm (mws typedsearchterm)* ws RIGHT_PAREN;
 wild : ((CAP_W | W)|(CAP_W | W)) ((CAP_I | I)|(CAP_I | I)) ((CAP_L | L)|(CAP_L | L)) ((CAP_D | D)|(CAP_D | D));
-match : ((CAP_M | M)|(CAP_M | M)) ((CAP_A | A)|(CAP_A | A)) ((CAP_T | T)|(CAP_T | T)) ((CAP_C | C)|(CAP_C | C)) ((CAP_H | H)|(CAP_H | H));
+matchkeyword : ((CAP_M | M)|(CAP_M | M)) ((CAP_A | A)|(CAP_A | A)) ((CAP_T | T)|(CAP_T | T)) ((CAP_C | C)|(CAP_C | C)) ((CAP_H | H)|(CAP_H | H));
 matchsearchterm : (nonwsnonescapedchar | escapedchar)+;
 matchsearchtermset : qm ws matchsearchterm (mws matchsearchterm)* ws qm;
 wildsearchterm : (anynonescapedchar | escapedwildchar)+;

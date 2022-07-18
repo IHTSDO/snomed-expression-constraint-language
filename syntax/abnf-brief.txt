@@ -51,14 +51,19 @@ numericComparisonOperator = "=" / "!=" / "<=" / "<" / ">=" / ">"
 timeComparisonOperator = "=" / "!=" / "<=" / "<" / ">=" / ">"
 stringComparisonOperator = "=" / "!="
 booleanComparisonOperator = "=" / "!="
+idComparisonOperator = "=" / "!="
 descriptionFilterConstraint = "{{" ws [ "d" / "D" ] ws descriptionFilter *(ws "," ws descriptionFilter) ws "}}"
-descriptionFilter = termFilter / languageFilter / typeFilter / dialectFilter / moduleFilter / effectiveTimeFilter / activeFilter
+descriptionFilter = termFilter / languageFilter / typeFilter / dialectFilter / moduleFilter / effectiveTimeFilter / activeFilter / descriptionIdFilter
+descriptionIdFilter = descriptionIdKeyword ws idComparisonOperator ws (descriptionId / descriptionIdSet)
+descriptionIdKeyword = ("i"/"I") ("d"/"D")
+descriptionId = sctId
+descriptionIdSet = "(" ws descriptionId *(mws descriptionId) ws ")"
 termFilter = termKeyword ws stringComparisonOperator ws (typedSearchTerm / typedSearchTermSet)
 termKeyword = ("t"/"T") ("e"/"E") ("r"/"R") ("m"/"M")
-typedSearchTerm = ( [ match ws ":" ws ] matchSearchTermSet ) / ( wild ws ":" ws wildSearchTermSet )
+typedSearchTerm = ( [ matchKeyword ws ":" ws ] matchSearchTermSet ) / ( wild ws ":" ws wildSearchTermSet )
 typedSearchTermSet = "(" ws typedSearchTerm *(mws typedSearchTerm) ws ")"
 wild = ("w"/"W") ("i"/"I") ("l"/"L") ("d"/"D")
-match = ("m"/"M") ("a"/"A") ("t"/"T") ("c"/"C") ("h"/"H")
+matchKeyword = ("m"/"M") ("a"/"A") ("t"/"T") ("c"/"C") ("h"/"H")
 matchSearchTerm = 1*(nonwsNonEscapedChar / escapedChar)
 matchSearchTermSet = QM ws matchSearchTerm *(mws matchSearchTerm) ws QM
 wildSearchTerm = 1*(anyNonEscapedChar / escapedWildChar)
@@ -117,7 +122,7 @@ activeValue = activeTrueValue / activeFalseValue
 activeTrueValue = "1" / "true"
 activeFalseValue = "0" / "false"
 memberFilterConstraint = "{{" ws ("m" / "M") ws memberFilter *(ws "," ws memberFilter) ws "}}"
-memberFilter = memberFieldFilter / moduleFilter / effectiveTimeFilter / activeFilter
+memberFilter = moduleFilter / effectiveTimeFilter / activeFilter / memberFieldFilter
 memberFieldFilter = refsetFieldName ws (expressionComparisonOperator ws subExpressionConstraint / numericComparisonOperator ws "#" numericValue / stringComparisonOperator ws (typedSearchTerm / typedSearchTermSet) / booleanComparisonOperator ws booleanValue / ws timeComparisonOperator ws (timeValue / timeValueSet) )
 historySupplement = "{{" ws "+" ws historyKeyword [ historyProfileSuffix / ws historySubset ] ws "}}"
 historyKeyword = ("h"/"H") ("i"/"I") ("s"/"S") ("t"/"T") ("o"/"O") ("r"/"R") ("y"/"Y")

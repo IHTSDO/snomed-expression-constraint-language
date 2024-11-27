@@ -125,7 +125,7 @@ month : (ZERO ONE) | (ZERO TWO) | (ZERO THREE) | (ZERO FOUR) | (ZERO FIVE) | (ZE
 day : (ZERO ONE) | (ZERO TWO) | (ZERO THREE) | (ZERO FOUR) | (ZERO FIVE) | (ZERO SIX) | (ZERO SEVEN) | (ZERO EIGHT) | (ZERO NINE) | (ONE ZERO) | (ONE ONE) | (ONE TWO) | (ONE THREE) | (ONE FOUR) | (ONE FIVE) | (ONE SIX) | (ONE SEVEN) | (ONE EIGHT) | (ONE NINE) | (TWO ZERO) | (TWO ONE) | (TWO TWO) | (TWO THREE) | (TWO FOUR) | (TWO FIVE) | (TWO SIX) | (TWO SEVEN) | (TWO EIGHT) | (TWO NINE) | (THREE ZERO) | (THREE ONE);
 activefilter : activekeyword ws booleancomparisonoperator ws activevalue;
 activekeyword : ((CAP_A | A)|(CAP_A | A)) ((CAP_C | C)|(CAP_C | C)) ((CAP_T | T)|(CAP_T | T)) ((CAP_I | I)|(CAP_I | I)) ((CAP_V | V)|(CAP_V | V)) ((CAP_E | E)|(CAP_E | E));
-activevalue : activetruevalue | activefalsevalue;
+activevalue : activetruevalue | activefalsevalue | wildcard;
 activetruevalue : ONE | ((CAP_T | T) (CAP_R | R) (CAP_U | U) (CAP_E | E));
 activefalsevalue : ZERO | ((CAP_F | F) (CAP_A | A) (CAP_L | L) (CAP_S | S) (CAP_E | E));
 memberfilterconstraint : (LEFT_CURLY_BRACE LEFT_CURLY_BRACE) ws ((CAP_M | M) | (CAP_M | M)) ws memberfilter (ws COMMA ws memberfilter)* ws (RIGHT_CURLY_BRACE RIGHT_CURLY_BRACE);

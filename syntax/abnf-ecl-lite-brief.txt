@@ -48,8 +48,6 @@ idComparisonOperator = "=" / "!="
 matchSearchTerm = 1*(nonwsNonEscapedChar / escapedChar)
 matchSearchTermSet = QM ws matchSearchTerm *(mws matchSearchTerm) ws QM
 concreteSearchTermSet = "(" ws matchSearchTermSet *(mws matchSearchTermSet) ws ")"
-wildSearchTerm = 1*(anyNonEscapedChar / escapedWildChar)
-wildSearchTermSet = QM wildSearchTerm QM
 conceptFilterConstraint = "{{" ws ("c" / "C") ws conceptFilter *(ws "," ws conceptFilter) ws "}}"
 conceptFilter = activeFilter
 activeFilter = activeKeyword ws booleanComparisonOperator ws activeValue

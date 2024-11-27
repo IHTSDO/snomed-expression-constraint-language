@@ -45,7 +45,7 @@ conjunctionattributeset : (ws conjunction ws subattributeset)+;
 disjunctionattributeset : (ws disjunction ws subattributeset)+;
 subattributeset : eclattribute | (LEFT_PAREN ws eclattributeset ws RIGHT_PAREN);
 eclattributegroup : (LEFT_BRACE cardinality RIGHT_BRACE ws)? LEFT_CURLY_BRACE ws eclattributeset ws RIGHT_CURLY_BRACE;
-eclattribute : (LEFT_BRACE cardinality RIGHT_BRACE ws)? (reverseflag ws)? eclattributename ws ((expressioncomparisonoperator ws subexpressionconstraint) | (numericcomparisonoperator ws HASH numericvalue) | (stringcomparisonoperator ws (typedsearchterm | typedsearchtermset)) | (booleancomparisonoperator ws booleanvalue));
+eclattribute : (LEFT_BRACE cardinality RIGHT_BRACE ws)? (reverseflag ws)? eclattributename ws ((expressioncomparisonoperator ws subexpressionconstraint) | (numericcomparisonoperator ws HASH numericvalue) | (stringcomparisonoperator ws (matchsearchterm | concretesearchtermset)) | (booleancomparisonoperator ws booleanvalue));
 cardinality : minvalue to maxvalue;
 minvalue : nonnegativeintegervalue;
 to : (PERIOD PERIOD);
@@ -69,6 +69,7 @@ termfilter : termkeyword ws stringcomparisonoperator ws (typedsearchterm | typed
 termkeyword : ((CAP_T | T)|(CAP_T | T)) ((CAP_E | E)|(CAP_E | E)) ((CAP_R | R)|(CAP_R | R)) ((CAP_M | M)|(CAP_M | M));
 typedsearchterm : ( ( matchkeyword ws COLON ws )? matchsearchtermset ) | ( wild ws COLON ws wildsearchtermset );
 typedsearchtermset : LEFT_PAREN ws typedsearchterm (mws typedsearchterm)* ws RIGHT_PAREN;
+concretesearchtermset : LEFT_PAREN ws matchsearchtermset (mws matchsearchtermset)* ws RIGHT_PAREN;
 wild : ((CAP_W | W)|(CAP_W | W)) ((CAP_I | I)|(CAP_I | I)) ((CAP_L | L)|(CAP_L | L)) ((CAP_D | D)|(CAP_D | D));
 matchkeyword : ((CAP_M | M)|(CAP_M | M)) ((CAP_A | A)|(CAP_A | A)) ((CAP_T | T)|(CAP_T | T)) ((CAP_C | C)|(CAP_C | C)) ((CAP_H | H)|(CAP_H | H));
 matchsearchterm : (nonwsnonescapedchar | escapedchar)+;

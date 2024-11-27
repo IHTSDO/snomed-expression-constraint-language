@@ -38,7 +38,7 @@ conjunctionAttributeSet = 1*(ws conjunction ws subAttributeSet)
 disjunctionAttributeSet = 1*(ws disjunction ws subAttributeSet)
 subAttributeSet = eclAttribute / "(" ws eclAttributeSet ws ")"
 eclAttributeGroup = "{" ws eclAttributeSet ws "}"
-eclAttribute = eclAttributeName ws (expressionComparisonOperator ws subExpressionConstraint / numericComparisonOperator ws "#" numericValue / stringComparisonOperator ws matchSearchTermSet / booleanComparisonOperator ws booleanValue)
+eclAttribute = eclAttributeName ws (expressionComparisonOperator ws subExpressionConstraint / numericComparisonOperator ws "#" numericValue / stringComparisonOperator ws (matchSearchTermSet / concreteSearchTermSet) / booleanComparisonOperator ws booleanValue)
 eclAttributeName = subExpressionConstraint
 expressionComparisonOperator = "=" / "!="
 numericComparisonOperator = "=" / "!=" / "<=" / "<" / ">=" / ">"
@@ -47,6 +47,7 @@ booleanComparisonOperator = "=" / "!="
 idComparisonOperator = "=" / "!="
 matchSearchTerm = 1*(nonwsNonEscapedChar / escapedChar)
 matchSearchTermSet = QM ws matchSearchTerm *(mws matchSearchTerm) ws QM
+concreteSearchTermSet = "(" ws matchSearchTermSet *(mws matchSearchTermSet) ws ")"
 wildSearchTerm = 1*(anyNonEscapedChar / escapedWildChar)
 wildSearchTermSet = QM wildSearchTerm QM
 conceptFilterConstraint = "{{" ws ("c" / "C") ws conceptFilter *(ws "," ws conceptFilter) ws "}}"

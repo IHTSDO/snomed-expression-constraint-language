@@ -7,9 +7,14 @@ SNOMED CT Family of Languages.
 
 The folders are organized as follows:
 * _**syntax**_
-  * Contains the brief (normative) and long (informative) ABNF syntaxes. Also the brief ANTLR v4 syntax.
+  * `ECL.g4` the ANTLR grammar file (**recommended**)
+  * `abnf-brief.txt` the normative ABNF grammar file
+  * `abnf-long.txt` the long ABNF grammar file
 * _**examples**_
   * Contains an extensive set of files with valid ECL examples.
+
+Please note that the ABNF has some ambiguity because the `memberFieldFilter` uses a wildcard field name that can overlap with other filters when there is no order of preference.
+The ANTLR grammar is a better alternative and is recommended.
 
 ## Other Useful Resources
 

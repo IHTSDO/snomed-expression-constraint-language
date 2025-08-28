@@ -7,10 +7,12 @@ disjunctionexpressionconstraint : subexpressionconstraint (ws disjunction ws sub
 exclusionexpressionconstraint : subexpressionconstraint ws exclusion ws subexpressionconstraint;
 dottedexpressionconstraint : subexpressionconstraint (ws dottedexpressionattribute)+;
 dottedexpressionattribute : dot ws eclattributename;
-subexpressionconstraint: (constraintoperator ws)? ( ( (memberof ws)? (eclfocusconcept | (LEFT_PAREN ws expressionconstraint ws RIGHT_PAREN)) (ws memberfilterconstraint)*) | (eclfocusconcept | (LEFT_PAREN ws expressionconstraint ws RIGHT_PAREN)) ) (ws (descriptionfilterconstraint | conceptfilterconstraint))* (ws historysupplement)?;
+subexpressionconstraint: (constraintoperator ws)? ( ( (refsetOperator ws)? (eclfocusconcept | (LEFT_PAREN ws expressionconstraint ws RIGHT_PAREN)) (ws memberfilterconstraint)*) | (eclfocusconcept | (LEFT_PAREN ws expressionconstraint ws RIGHT_PAREN)) ) (ws (descriptionfilterconstraint | conceptfilterconstraint))* (ws historysupplement)?;
 eclfocusconcept : eclconceptreference | wildcard | altidentifier;
 dot : PERIOD;
+refsetOperator : memberOf | refsetContainingAny;
 memberof : CARAT ( ws LEFT_BRACE ws (refsetfieldnameset | wildcard) ws RIGHT_BRACE )?;
+refsetContainingAny : (CARAT QUESTION_MARK);
 refsetfieldnameset : refsetfieldname (ws COMMA ws refsetfieldname)*;
 refsetfieldname : alpha+;
 eclconceptreference : conceptid (ws PIPE ws term ws PIPE)?;

@@ -12,7 +12,7 @@ eclfocusconcept : eclconceptreference | wildcard | altidentifier;
 dot : PERIOD;
 refsetOperator : memberOf | refsetContainingAny;
 memberof : CARAT ( ws LEFT_BRACE ws (refsetfieldnameset | wildcard) ws RIGHT_BRACE )?;
-refsetContainingAny : (CARAT QUESTION_MARK);
+refsetContainingAny : (CARAT CAP_R);
 refsetfieldnameset : refsetfieldname (ws COMMA ws refsetfieldname)*;
 refsetfieldname : alpha+;
 eclconceptreference : conceptid (ws PIPE ws term ws PIPE)?;
